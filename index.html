@@ -3,195 +3,165 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UrlCapsule | High Capacity</title>
+    <title>UrlCapsule | Secure Transfer</title>
     <style>
         :root {
             --primary: #4f46e5;
-            --primary-hover: #4338ca;
             --bg: #f3f4f6;
-            --card-bg: #ffffff;
+            --card: #ffffff;
             --text: #1f2937;
         }
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
+            font-family: sans-serif; background: var(--bg); color: var(--text);
+            display: flex; flex-direction: column; align-items: center; 
+            justify-content: center; min-height: 100vh; margin: 0; padding: 20px;
         }
         .container {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 16px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
+            background: var(--card); padding: 2rem; border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            width: 100%; max-width: 480px; text-align: center;
         }
-        h1 { margin-top: 0; color: var(--primary); font-size: 2.2rem; margin-bottom: 0.5rem; }
-        .tagline { color: #6b7280; margin-bottom: 2rem; font-size: 0.95rem; }
-        .hidden { display: none; }
+        h1 { margin: 0 0 0.5rem 0; color: var(--primary); }
+        .hidden { display: none !important; } /* Force hide */
+        
         button {
-            background: var(--primary); color: white; border: none; padding: 12px 24px;
-            border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600;
-            transition: background 0.2s; width: 100%;
+            background: var(--primary); color: white; border: none; padding: 12px;
+            border-radius: 6px; cursor: pointer; font-size: 1rem; width: 100%;
+            margin-top: 10px;
         }
-        button:hover { background: var(--primary-hover); }
-        input[type="file"] { margin-bottom: 20px; }
-        textarea {
-            width: 100%; height: 100px; padding: 12px; margin-bottom: 15px;
-            border: 2px solid #e5e7eb; border-radius: 8px; box-sizing: border-box;
-            font-family: monospace; font-size: 0.8rem; resize: none;
+        button:hover { opacity: 0.9; }
+        
+        input, textarea {
+            width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc;
+            border-radius: 6px; box-sizing: border-box;
         }
-        .warning {
-            background: #fffbeb; color: #92400e; padding: 12px; border-radius: 8px;
-            margin-bottom: 1.5rem; font-size: 0.85rem; border: 1px solid #fcd34d; text-align: left;
+        
+        /* Error Box Style */
+        .error-box {
+            background: #fee2e2; color: #991b1b; padding: 10px; 
+            border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem;
+            border: 1px solid #f87171;
         }
-        #status { margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
-        .footer { margin-top: 2rem; font-size: 0.8rem; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 1rem; }
-        .footer span { color: var(--primary); font-weight: 600; }
+        
+        .footer { margin-top: 20px; font-size: 0.8rem; color: #888; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>💊 UrlCapsule <span style="font-size: 0.5em; vertical-align: middle; background: #e0e7ff; color: #4338ca; padding: 2px 6px; border-radius: 4px;">PRO</span></h1>
-    <div class="tagline">Secure, Serverless, High Capacity.</div>
-    
-    <div class="warning">
-        <strong>⚠️ New Limit: ~2MB</strong><br>
-        Because the link is huge, you likely cannot paste it into WhatsApp/SMS. 
-        It works best via Email or direct copy-paste.
-    </div>
+    <h1>💊 UrlCapsule</h1>
+    <p style="color:#666; margin-top:0;">Made by Aryan Giri</p>
+
+    <div id="errorDisplay" class="error-box hidden"></div>
 
     <div id="uploadSection">
-        <h3>Encapsulate a File</h3>
+        <h3>1. Select File</h3>
         <input type="file" id="fileInput">
-        <div id="status"></div>
+        <p id="uploadStatus" style="font-size:0.9rem; min-height: 20px;"></p>
         
-        <div id="linkContainer" class="hidden" style="margin-top: 20px;">
-            <p style="margin-bottom: 5px; text-align: left; font-size: 0.9rem; font-weight: bold;">Your Massive Link:</p>
-            <textarea id="shareLink" readonly></textarea>
-            <button onclick="copyLink()">Copy Link to Clipboard</button>
+        <div id="linkContainer" class="hidden">
+            <h3>2. Copy Link</h3>
+            <textarea id="shareLink" rows="4" readonly onclick="this.select()"></textarea>
+            <button onclick="copyLink()">Copy Link</button>
         </div>
     </div>
 
     <div id="downloadSection" class="hidden">
-        <h3>Capsule Received!</h3>
-        <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
-            <p style="margin: 5px 0;"><strong>📄 Name:</strong> <span id="fileNameDisplay"></span></p>
-            <p style="margin: 5px 0;"><strong>🏷️ Type:</strong> <span id="fileTypeDisplay"></span></p>
-            <p style="margin: 5px 0;"><strong>💾 Size:</strong> <span id="fileSizeDisplay"></span></p>
+        <h3>📦 File Received!</h3>
+        <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; text-align: left; margin-bottom:15px; border:1px solid #bbf7d0;">
+            <p><strong>Name:</strong> <span id="fileName"></span></p>
+            <p><strong>Size:</strong> <span id="fileSize"></span></p>
         </div>
-        <button id="downloadBtn">Download File</button>
+        <button id="downloadBtn" style="background: #16a34a; font-weight: bold;">Download Now ⬇️</button>
+        
         <br><br>
-        <a href="/" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">← Send a new file</a>
+        <button onclick="window.location.hash=''; window.location.reload();" style="background:#e5e7eb; color:#333;">← Send New File</button>
     </div>
-
-    <div class="footer">Made by <span>Aryan Giri</span></div>
 </div>
 
 <script>
-    // 1. CHECK FOR FILE IN HASH (FRAGMENT)
-    window.addEventListener('DOMContentLoaded', () => {
-        // We look at location.hash instead of location.search
-        if (window.location.hash.length > 10) {
+    // --- RECEIVER LOGIC ---
+    window.addEventListener('load', () => {
+        // Check if there is a hash (data after #)
+        if (window.location.hash.length > 20) {
+            console.log("Hash detected. Attempting decode...");
+            
             try {
-                // Remove the '#' character
-                const hashContent = window.location.hash.substring(1);
+                // 1. Hide Upload, Show Download (Optimistically)
+                document.getElementById('uploadSection').classList.add('hidden');
                 
-                // Decode URI component just in case
-                const jsonString = decodeURIComponent(hashContent);
+                // 2. Decode Data
+                const rawHash = window.location.hash.substring(1); // Remove '#'
+                const jsonString = decodeURIComponent(rawHash);
                 const data = JSON.parse(jsonString);
 
-                // Show Download Screen
-                document.getElementById('uploadSection').classList.add('hidden');
+                // 3. Update UI
+                document.getElementById('fileName').textContent = data.name;
+                document.getElementById('fileSize').textContent = (data.b64.length * 0.75 / 1024).toFixed(1) + " KB";
                 document.getElementById('downloadSection').classList.remove('hidden');
-                document.querySelector('.warning').classList.add('hidden');
-                
-                document.getElementById('fileNameDisplay').textContent = data.name;
-                document.getElementById('fileTypeDisplay').textContent = data.type;
-                document.getElementById('fileSizeDisplay').textContent = (data.b64.length * 0.75 / 1024).toFixed(1) + ' KB';
 
-                const downloadBtn = document.getElementById('downloadBtn');
-                downloadBtn.onclick = () => {
-                    const dataUri = `data:${data.type};base64,${data.b64}`;
+                // 4. Activate Button
+                const btn = document.getElementById('downloadBtn');
+                btn.onclick = () => {
                     const link = document.createElement('a');
-                    link.href = dataUri;
+                    link.href = `data:${data.type};base64,${data.b64}`;
                     link.download = data.name;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 };
-            } catch (e) {
-                console.error("Error parsing hash", e);
+
+            } catch (err) {
+                // IF ERROR: Show the error box
+                console.error(err);
+                document.getElementById('uploadSection').classList.remove('hidden');
+                document.getElementById('downloadSection').classList.add('hidden');
+                
+                const errBox = document.getElementById('errorDisplay');
+                errBox.classList.remove('hidden');
+                errBox.innerHTML = `<strong>❌ Link Broken:</strong> The URL seems incomplete.<br>Did you copy the entire link?<br><br><small>Error: ${err.message}</small>`;
             }
         }
     });
 
-    // 2. FILE UPLOAD LOGIC
-    const fileInput = document.getElementById('fileInput');
-    const statusDiv = document.getElementById('status');
-    const linkContainer = document.getElementById('linkContainer');
-    const shareLinkInput = document.getElementById('shareLink');
-
-    fileInput.addEventListener('change', () => {
-        const file = fileInput.files[0];
+    // --- UPLOAD LOGIC ---
+    document.getElementById('fileInput').addEventListener('change', function() {
+        const file = this.files[0];
         if (!file) return;
 
-        // NEW LIMIT: 2MB (2,000,000 bytes)
-        if (file.size > 2000000) { 
-            alert("File is too big! Limit is 2MB.");
-            fileInput.value = ""; 
+        // Limit check (2MB)
+        if (file.size > 2000000) {
+            alert("File too large (Max 2MB).");
+            this.value = "";
             return;
         }
 
-        statusDiv.innerText = "⏳ Encapsulating... (This may freeze for a second)";
-        statusDiv.style.color = "#d97706";
+        const status = document.getElementById('uploadStatus');
+        status.innerText = "Processing... (Please wait)";
+        status.style.color = "orange";
 
         const reader = new FileReader();
-        
-        reader.onload = function(e) {
-            const result = e.target.result;
-            const base64Data = result.split(',')[1];
+        reader.onload = (e) => {
+            const b64 = e.target.result.split(',')[1];
+            const data = { name: file.name, type: file.type, b64: b64 };
             
-            // We pack everything into a JSON object
-            const fileData = {
-                name: file.name,
-                type: file.type,
-                b64: base64Data
-            };
-
-            // Convert to string
-            const jsonString = JSON.stringify(fileData);
+            // Create URL
+            const jsonStr = JSON.stringify(data);
+            const fullUrl = window.location.href.split('#')[0] + '#' + encodeURIComponent(jsonStr);
             
-            // Create the hash URL
-            const currentUrl = window.location.href.split('#')[0];
-            const fullUrl = `${currentUrl}#${encodeURIComponent(jsonString)}`;
-
-            shareLinkInput.value = fullUrl;
-            linkContainer.classList.remove('hidden');
-            statusDiv.innerText = "✅ Capsule created! (Size: " + (fullUrl.length/1024).toFixed(0) + " KB)";
-            statusDiv.style.color = "#10b981";
+            document.getElementById('shareLink').value = fullUrl;
+            document.getElementById('linkContainer').classList.remove('hidden');
+            status.innerText = "✅ Ready! Copy the link below.";
+            status.style.color = "green";
         };
-
         reader.readAsDataURL(file);
     });
 
     function copyLink() {
         const copyText = document.getElementById("shareLink");
         copyText.select();
-        copyText.setSelectionRange(0, 9999999); // Big number for big text
         navigator.clipboard.writeText(copyText.value);
-        
-        const btn = document.querySelector("#linkContainer button");
-        btn.innerText = "Copied! (Paste this into a browser)";
-        setTimeout(() => btn.innerText = "Copy Link to Clipboard", 3000);
+        alert("Link Copied!");
     }
 </script>
 

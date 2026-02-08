@@ -5,163 +5,310 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UrlCapsule | Secure Transfer</title>
     <style>
+        /* 1. DEFINE VARIABLES FOR THEMES */
         :root {
+            /* Light Theme (Default) */
+            --bg-color: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-sec: #6b7280;
             --primary: #4f46e5;
-            --bg: #f3f4f6;
-            --card: #ffffff;
-            --text: #1f2937;
+            --primary-hover: #4338ca;
+            --border: #e5e7eb;
+            --input-bg: #ffffff;
+            --warning-bg: #fffbeb;
+            --warning-text: #92400e;
+            --warning-border: #fcd34d;
+            --success-bg: #ecfdf5;
+            --success-text: #065f46;
         }
+
+        /* Dark Theme Overrides */
+        [data-theme="dark"] {
+            --bg-color: #111827;
+            --card-bg: #1f2937;
+            --text-main: #f9fafb;
+            --text-sec: #9ca3af;
+            --primary: #6366f1;
+            --primary-hover: #818cf8;
+            --border: #374151;
+            --input-bg: #374151;
+            --warning-bg: #451a03;
+            --warning-text: #fcd34d;
+            --warning-border: #78350f;
+            --success-bg: #064e3b;
+            --success-text: #a7f3d0;
+        }
+
+        /* 2. GLOBAL STYLES */
         body {
-            font-family: sans-serif; background: var(--bg); color: var(--text);
-            display: flex; flex-direction: column; align-items: center; 
-            justify-content: center; min-height: 100vh; margin: 0; padding: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
+
         .container {
-            background: var(--card); padding: 2rem; border-radius: 12px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            width: 100%; max-width: 480px; text-align: center;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+            position: relative;
+            transition: background-color 0.3s ease;
         }
-        h1 { margin: 0 0 0.5rem 0; color: var(--primary); }
-        .hidden { display: none !important; } /* Force hide */
-        
-        button {
-            background: var(--primary); color: white; border: none; padding: 12px;
-            border-radius: 6px; cursor: pointer; font-size: 1rem; width: 100%;
+
+        /* Theme Toggle Button */
+        .theme-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-main);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 8px;
+            width: auto;
+            transition: all 0.2s;
+        }
+        .theme-btn:hover { background: var(--border); }
+
+        h1 { margin-top: 0; color: var(--primary); font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .tagline { color: var(--text-sec); margin-bottom: 2rem; font-size: 0.95rem; }
+        .hidden { display: none !important; }
+
+        button.action-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.2s;
+            width: 100%;
             margin-top: 10px;
         }
-        button:hover { opacity: 0.9; }
+        button.action-btn:hover { background: var(--primary-hover); }
+
+        input[type="file"] { margin-bottom: 20px; color: var(--text-sec); }
         
-        input, textarea {
-            width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ccc;
-            border-radius: 6px; box-sizing: border-box;
+        textarea {
+            width: 100%; height: 100px; padding: 12px; margin-bottom: 15px;
+            background: var(--input-bg); color: var(--text-main);
+            border: 2px solid var(--border); border-radius: 8px; 
+            box-sizing: border-box; font-family: monospace; font-size: 0.8rem; resize: none;
         }
-        
-        /* Error Box Style */
-        .error-box {
-            background: #fee2e2; color: #991b1b; padding: 10px; 
-            border-radius: 6px; margin-bottom: 15px; font-size: 0.9rem;
-            border: 1px solid #f87171;
+
+        .warning {
+            background: var(--warning-bg); color: var(--warning-text);
+            padding: 12px; border-radius: 8px; margin-bottom: 1.5rem;
+            font-size: 0.85rem; border: 1px solid var(--warning-border); text-align: left;
         }
+
+        .file-info {
+            background: var(--bg-color); 
+            padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;
+            border: 1px solid var(--border);
+        }
+
+        #status { margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
         
-        .footer { margin-top: 20px; font-size: 0.8rem; color: #888; }
+        .footer { margin-top: 2rem; font-size: 0.8rem; color: var(--text-sec); border-top: 1px solid var(--border); padding-top: 1rem; }
+        .footer span { color: var(--primary); font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>💊 UrlCapsule</h1>
-    <p style="color:#666; margin-top:0;">Made by Aryan Giri</p>
+    <button class="theme-btn" onclick="toggleTheme()" id="themeIcon">🌙</button>
 
-    <div id="errorDisplay" class="error-box hidden"></div>
+    <h1>💊 UrlCapsule <span style="font-size: 0.4em; vertical-align: middle; background: var(--primary); color: white; padding: 2px 6px; border-radius: 4px;">v3.0</span></h1>
+    <div class="tagline">Secure, Serverless, High Capacity.</div>
+    
+    <div class="warning">
+        <strong>⚠️ Note:</strong> Max file size is ~2MB. The link will be very long.
+    </div>
 
     <div id="uploadSection">
-        <h3>1. Select File</h3>
+        <h3>Encapsulate a File</h3>
         <input type="file" id="fileInput">
-        <p id="uploadStatus" style="font-size:0.9rem; min-height: 20px;"></p>
+        <div id="status"></div>
         
-        <div id="linkContainer" class="hidden">
-            <h3>2. Copy Link</h3>
-            <textarea id="shareLink" rows="4" readonly onclick="this.select()"></textarea>
-            <button onclick="copyLink()">Copy Link</button>
+        <div id="linkContainer" class="hidden" style="margin-top: 20px;">
+            <p style="margin-bottom: 5px; text-align: left; font-size: 0.9rem; font-weight: bold;">Your Massive Link:</p>
+            <textarea id="shareLink" readonly></textarea>
+            <button class="action-btn" onclick="copyLink()">Copy Link to Clipboard</button>
         </div>
     </div>
 
     <div id="downloadSection" class="hidden">
-        <h3>📦 File Received!</h3>
-        <div style="background: #f0fdf4; padding: 15px; border-radius: 8px; text-align: left; margin-bottom:15px; border:1px solid #bbf7d0;">
-            <p><strong>Name:</strong> <span id="fileName"></span></p>
-            <p><strong>Size:</strong> <span id="fileSize"></span></p>
+        <h3>Capsule Received!</h3>
+        <div class="file-info">
+            <p style="margin: 5px 0;"><strong>📄 Name:</strong> <span id="fileNameDisplay"></span></p>
+            <p style="margin: 5px 0;"><strong>🏷️ Type:</strong> <span id="fileTypeDisplay"></span></p>
+            <p style="margin: 5px 0;"><strong>💾 Size:</strong> <span id="fileSizeDisplay"></span></p>
         </div>
-        <button id="downloadBtn" style="background: #16a34a; font-weight: bold;">Download Now ⬇️</button>
-        
+        <button class="action-btn" id="downloadBtn">Download File</button>
         <br><br>
-        <button onclick="window.location.hash=''; window.location.reload();" style="background:#e5e7eb; color:#333;">← Send New File</button>
+        <a href="/" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">← Send a new file</a>
     </div>
+
+    <div class="footer">Made by <span>Aryan Giri</span></div>
 </div>
 
 <script>
-    // --- RECEIVER LOGIC ---
-    window.addEventListener('load', () => {
-        // Check if there is a hash (data after #)
-        if (window.location.hash.length > 20) {
-            console.log("Hash detected. Attempting decode...");
-            
+    // --- THEME LOGIC (COOKIES) ---
+    function setCookie(name, value, days) {
+        let expires = "";
+        if (days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            expires = "; expires=" + date.toUTCString();
+        }
+        document.cookie = name + "=" + (value || "") + expires + "; path=/";
+    }
+
+    function getCookie(name) {
+        const nameEQ = name + "=";
+        const ca = document.cookie.split(';');
+        for(let i=0; i < ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') c = c.substring(1, c.length);
+            if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length, c.length);
+        }
+        return null;
+    }
+
+    function applyTheme(theme) {
+        const icon = document.getElementById('themeIcon');
+        if (theme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            icon.innerText = '☀️';
+        } else {
+            document.documentElement.removeAttribute('data-theme');
+            icon.innerText = '🌙';
+        }
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        applyTheme(newTheme);
+        setCookie('theme', newTheme, 30); // Save for 30 days
+    }
+
+    // Load theme on start
+    const savedTheme = getCookie('theme');
+    if (savedTheme) {
+        applyTheme(savedTheme);
+    } else {
+        // Optional: Check system preference
+        if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            applyTheme('dark');
+        }
+    }
+
+    // --- FILE TRANSFER LOGIC ---
+
+    // 1. CHECK FOR FILE IN HASH (FRAGMENT)
+    window.addEventListener('DOMContentLoaded', () => {
+        if (window.location.hash.length > 10) {
             try {
-                // 1. Hide Upload, Show Download (Optimistically)
-                document.getElementById('uploadSection').classList.add('hidden');
-                
-                // 2. Decode Data
-                const rawHash = window.location.hash.substring(1); // Remove '#'
-                const jsonString = decodeURIComponent(rawHash);
+                const hashContent = window.location.hash.substring(1);
+                const jsonString = decodeURIComponent(hashContent);
                 const data = JSON.parse(jsonString);
 
-                // 3. Update UI
-                document.getElementById('fileName').textContent = data.name;
-                document.getElementById('fileSize').textContent = (data.b64.length * 0.75 / 1024).toFixed(1) + " KB";
+                document.getElementById('uploadSection').classList.add('hidden');
                 document.getElementById('downloadSection').classList.remove('hidden');
+                document.querySelector('.warning').classList.add('hidden');
+                
+                document.getElementById('fileNameDisplay').textContent = data.name;
+                document.getElementById('fileTypeDisplay').textContent = data.type;
+                document.getElementById('fileSizeDisplay').textContent = (data.b64.length * 0.75 / 1024).toFixed(1) + ' KB';
 
-                // 4. Activate Button
-                const btn = document.getElementById('downloadBtn');
-                btn.onclick = () => {
+                const downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.onclick = () => {
+                    const dataUri = `data:${data.type};base64,${data.b64}`;
                     const link = document.createElement('a');
-                    link.href = `data:${data.type};base64,${data.b64}`;
+                    link.href = dataUri;
                     link.download = data.name;
                     document.body.appendChild(link);
                     link.click();
                     document.body.removeChild(link);
                 };
-
-            } catch (err) {
-                // IF ERROR: Show the error box
-                console.error(err);
-                document.getElementById('uploadSection').classList.remove('hidden');
-                document.getElementById('downloadSection').classList.add('hidden');
-                
-                const errBox = document.getElementById('errorDisplay');
-                errBox.classList.remove('hidden');
-                errBox.innerHTML = `<strong>❌ Link Broken:</strong> The URL seems incomplete.<br>Did you copy the entire link?<br><br><small>Error: ${err.message}</small>`;
+            } catch (e) {
+                console.error("Error parsing hash", e);
             }
         }
     });
 
-    // --- UPLOAD LOGIC ---
-    document.getElementById('fileInput').addEventListener('change', function() {
-        const file = this.files[0];
+    // 2. FILE UPLOAD LOGIC
+    const fileInput = document.getElementById('fileInput');
+    const statusDiv = document.getElementById('status');
+    const linkContainer = document.getElementById('linkContainer');
+    const shareLinkInput = document.getElementById('shareLink');
+
+    fileInput.addEventListener('change', () => {
+        const file = fileInput.files[0];
         if (!file) return;
 
-        // Limit check (2MB)
-        if (file.size > 2000000) {
-            alert("File too large (Max 2MB).");
-            this.value = "";
+        if (file.size > 2000000) { 
+            alert("File is too big! Limit is 2MB.");
+            fileInput.value = ""; 
             return;
         }
 
-        const status = document.getElementById('uploadStatus');
-        status.innerText = "Processing... (Please wait)";
-        status.style.color = "orange";
+        statusDiv.innerText = "⏳ Encapsulating...";
+        statusDiv.style.color = "var(--warning-text)";
 
         const reader = new FileReader();
-        reader.onload = (e) => {
-            const b64 = e.target.result.split(',')[1];
-            const data = { name: file.name, type: file.type, b64: b64 };
+        
+        reader.onload = function(e) {
+            const result = e.target.result;
+            const base64Data = result.split(',')[1];
             
-            // Create URL
-            const jsonStr = JSON.stringify(data);
-            const fullUrl = window.location.href.split('#')[0] + '#' + encodeURIComponent(jsonStr);
-            
-            document.getElementById('shareLink').value = fullUrl;
-            document.getElementById('linkContainer').classList.remove('hidden');
-            status.innerText = "✅ Ready! Copy the link below.";
-            status.style.color = "green";
+            const fileData = {
+                name: file.name,
+                type: file.type,
+                b64: base64Data
+            };
+
+            const jsonString = JSON.stringify(fileData);
+            const currentUrl = window.location.href.split('#')[0];
+            const fullUrl = `${currentUrl}#${encodeURIComponent(jsonString)}`;
+
+            shareLinkInput.value = fullUrl;
+            linkContainer.classList.remove('hidden');
+            statusDiv.innerText = "✅ Capsule created!";
+            statusDiv.style.color = "var(--success-text)";
         };
+
         reader.readAsDataURL(file);
     });
 
     function copyLink() {
         const copyText = document.getElementById("shareLink");
         copyText.select();
+        copyText.setSelectionRange(0, 9999999); 
         navigator.clipboard.writeText(copyText.value);
-        alert("Link Copied!");
+        
+        const btn = document.querySelector("#linkContainer button");
+        const originalText = btn.innerText;
+        btn.innerText = "Copied!";
+        setTimeout(() => btn.innerText = originalText, 2000);
     }
 </script>
 

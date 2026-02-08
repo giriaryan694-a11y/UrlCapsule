@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UrlCapsule | Private File Sharing</title>
+    <title>UrlCapsule | High Capacity</title>
     <style>
         :root {
             --primary: #4f46e5;
@@ -12,7 +12,6 @@
             --card-bg: #ffffff;
             --text: #1f2937;
         }
-
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--bg);
@@ -25,7 +24,6 @@
             margin: 0;
             padding: 20px;
         }
-
         .container {
             background: var(--card-bg);
             padding: 2.5rem;
@@ -35,105 +33,51 @@
             max-width: 500px;
             text-align: center;
         }
-
-        h1 {
-            margin-top: 0;
-            color: var(--primary);
-            font-size: 2.2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .tagline {
-            color: #6b7280;
-            margin-bottom: 2rem;
-            font-size: 0.95rem;
-        }
-
+        h1 { margin-top: 0; color: var(--primary); font-size: 2.2rem; margin-bottom: 0.5rem; }
+        .tagline { color: #6b7280; margin-bottom: 2rem; font-size: 0.95rem; }
         .hidden { display: none; }
-
         button {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: background 0.2s;
-            width: 100%;
+            background: var(--primary); color: white; border: none; padding: 12px 24px;
+            border-radius: 8px; cursor: pointer; font-size: 1rem; font-weight: 600;
+            transition: background 0.2s; width: 100%;
         }
-
         button:hover { background: var(--primary-hover); }
-
-        input[type="file"] {
-            margin-bottom: 20px;
+        input[type="file"] { margin-bottom: 20px; }
+        textarea {
+            width: 100%; height: 100px; padding: 12px; margin-bottom: 15px;
+            border: 2px solid #e5e7eb; border-radius: 8px; box-sizing: border-box;
+            font-family: monospace; font-size: 0.8rem; resize: none;
         }
-
-        input[type="text"] {
-            width: 100%;
-            padding: 12px;
-            margin-bottom: 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            box-sizing: border-box;
-            font-family: monospace;
-            font-size: 0.9rem;
-        }
-
         .warning {
-            background: #fffbeb;
-            color: #92400e;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 1.5rem;
-            font-size: 0.85rem;
-            border: 1px solid #fcd34d;
-            text-align: left;
+            background: #fffbeb; color: #92400e; padding: 12px; border-radius: 8px;
+            margin-bottom: 1.5rem; font-size: 0.85rem; border: 1px solid #fcd34d; text-align: left;
         }
-
-        #status {
-            margin-top: 15px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        /* Footer / Attribution */
-        .footer {
-            margin-top: 2rem;
-            font-size: 0.8rem;
-            color: #9ca3af;
-            border-top: 1px solid #e5e7eb;
-            padding-top: 1rem;
-        }
-
-        .footer span {
-            color: var(--primary);
-            font-weight: 600;
-        }
+        #status { margin-top: 15px; font-weight: 600; font-size: 0.9rem; }
+        .footer { margin-top: 2rem; font-size: 0.8rem; color: #9ca3af; border-top: 1px solid #e5e7eb; padding-top: 1rem; }
+        .footer span { color: var(--primary); font-weight: 600; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>💊 UrlCapsule</h1>
-    <div class="tagline">Secure, Serverless, Instant.</div>
+    <h1>💊 UrlCapsule <span style="font-size: 0.5em; vertical-align: middle; background: #e0e7ff; color: #4338ca; padding: 2px 6px; border-radius: 4px;">PRO</span></h1>
+    <div class="tagline">Secure, Serverless, High Capacity.</div>
     
     <div class="warning">
-        <strong>⚠️ Limit:</strong> This tool encapsulates files directly into the URL. 
-        Only use files smaller than <strong>15KB</strong> (e.g., small text files, tiny icons).
+        <strong>⚠️ New Limit: ~2MB</strong><br>
+        Because the link is huge, you likely cannot paste it into WhatsApp/SMS. 
+        It works best via Email or direct copy-paste.
     </div>
 
     <div id="uploadSection">
         <h3>Encapsulate a File</h3>
         <input type="file" id="fileInput">
-        
         <div id="status"></div>
         
         <div id="linkContainer" class="hidden" style="margin-top: 20px;">
-            <p style="margin-bottom: 5px; text-align: left; font-size: 0.9rem; font-weight: bold;">Your Capsule Link:</p>
-            <input type="text" id="shareLink" readonly>
-            <button onclick="copyLink()">Copy Link</button>
+            <p style="margin-bottom: 5px; text-align: left; font-size: 0.9rem; font-weight: bold;">Your Massive Link:</p>
+            <textarea id="shareLink" readonly></textarea>
+            <button onclick="copyLink()">Copy Link to Clipboard</button>
         </div>
     </div>
 
@@ -142,44 +86,51 @@
         <div style="background: #f9fafb; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
             <p style="margin: 5px 0;"><strong>📄 Name:</strong> <span id="fileNameDisplay"></span></p>
             <p style="margin: 5px 0;"><strong>🏷️ Type:</strong> <span id="fileTypeDisplay"></span></p>
+            <p style="margin: 5px 0;"><strong>💾 Size:</strong> <span id="fileSizeDisplay"></span></p>
         </div>
         <button id="downloadBtn">Download File</button>
         <br><br>
         <a href="/" style="color: var(--primary); text-decoration: none; font-size: 0.9rem;">← Send a new file</a>
     </div>
 
-    <div class="footer">
-        Made by <span>Aryan Giri</span>
-    </div>
+    <div class="footer">Made by <span>Aryan Giri</span></div>
 </div>
 
 <script>
-    // 1. CHECK FOR FILE IN URL ON LOAD
+    // 1. CHECK FOR FILE IN HASH (FRAGMENT)
     window.addEventListener('DOMContentLoaded', () => {
-        const params = new URLSearchParams(window.location.search);
-        const b64Data = params.get('b64');
-        const fileName = params.get('name');
-        const fileType = params.get('type');
+        // We look at location.hash instead of location.search
+        if (window.location.hash.length > 10) {
+            try {
+                // Remove the '#' character
+                const hashContent = window.location.hash.substring(1);
+                
+                // Decode URI component just in case
+                const jsonString = decodeURIComponent(hashContent);
+                const data = JSON.parse(jsonString);
 
-        if (b64Data && fileName) {
-            // We are in RECEIVER mode
-            document.getElementById('uploadSection').classList.add('hidden');
-            document.getElementById('downloadSection').classList.remove('hidden');
-            document.querySelector('.warning').classList.add('hidden'); // Hide warning for receiver
-            
-            document.getElementById('fileNameDisplay').textContent = fileName;
-            document.getElementById('fileTypeDisplay').textContent = fileType || 'Unknown';
+                // Show Download Screen
+                document.getElementById('uploadSection').classList.add('hidden');
+                document.getElementById('downloadSection').classList.remove('hidden');
+                document.querySelector('.warning').classList.add('hidden');
+                
+                document.getElementById('fileNameDisplay').textContent = data.name;
+                document.getElementById('fileTypeDisplay').textContent = data.type;
+                document.getElementById('fileSizeDisplay').textContent = (data.b64.length * 0.75 / 1024).toFixed(1) + ' KB';
 
-            const downloadBtn = document.getElementById('downloadBtn');
-            downloadBtn.onclick = () => {
-                const dataUri = `data:${fileType};base64,${b64Data}`;
-                const link = document.createElement('a');
-                link.href = dataUri;
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
+                const downloadBtn = document.getElementById('downloadBtn');
+                downloadBtn.onclick = () => {
+                    const dataUri = `data:${data.type};base64,${data.b64}`;
+                    const link = document.createElement('a');
+                    link.href = dataUri;
+                    link.download = data.name;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                };
+            } catch (e) {
+                console.error("Error parsing hash", e);
+            }
         }
     });
 
@@ -193,14 +144,15 @@
         const file = fileInput.files[0];
         if (!file) return;
 
-        // Size Check (Strict limit for URL safety)
-        if (file.size > 15000) { 
-            alert("File is too big (" + (file.size/1024).toFixed(1) + "KB).\nPlease choose a file under 15KB.");
+        // NEW LIMIT: 2MB (2,000,000 bytes)
+        if (file.size > 2000000) { 
+            alert("File is too big! Limit is 2MB.");
             fileInput.value = ""; 
-            statusDiv.innerText = "";
-            linkContainer.classList.add('hidden');
             return;
         }
+
+        statusDiv.innerText = "⏳ Encapsulating... (This may freeze for a second)";
+        statusDiv.style.color = "#d97706";
 
         const reader = new FileReader();
         
@@ -208,30 +160,24 @@
             const result = e.target.result;
             const base64Data = result.split(',')[1];
             
-            // Construct the URL
-            const currentUrl = window.location.href.split('?')[0];
-            const params = new URLSearchParams();
-            params.set('name', file.name);
-            params.set('type', file.type);
-            params.set('b64', base64Data);
+            // We pack everything into a JSON object
+            const fileData = {
+                name: file.name,
+                type: file.type,
+                b64: base64Data
+            };
 
-            const fullUrl = `${currentUrl}?${params.toString()}`;
+            // Convert to string
+            const jsonString = JSON.stringify(fileData);
+            
+            // Create the hash URL
+            const currentUrl = window.location.href.split('#')[0];
+            const fullUrl = `${currentUrl}#${encodeURIComponent(jsonString)}`;
 
-            // Safety check for URL length
-            if (fullUrl.length > 30000) {
-                 statusDiv.innerText = "❌ Capsule too heavy (URL too long). Try a smaller file.";
-                 statusDiv.style.color = "#ef4444";
-                 linkContainer.classList.add('hidden');
-            } else {
-                shareLinkInput.value = fullUrl;
-                linkContainer.classList.remove('hidden');
-                statusDiv.innerText = "✅ Capsule created successfully!";
-                statusDiv.style.color = "#10b981";
-            }
-        };
-
-        reader.onerror = function() {
-            statusDiv.innerText = "Error reading file.";
+            shareLinkInput.value = fullUrl;
+            linkContainer.classList.remove('hidden');
+            statusDiv.innerText = "✅ Capsule created! (Size: " + (fullUrl.length/1024).toFixed(0) + " KB)";
+            statusDiv.style.color = "#10b981";
         };
 
         reader.readAsDataURL(file);
@@ -240,13 +186,12 @@
     function copyLink() {
         const copyText = document.getElementById("shareLink");
         copyText.select();
-        copyText.setSelectionRange(0, 99999); 
+        copyText.setSelectionRange(0, 9999999); // Big number for big text
         navigator.clipboard.writeText(copyText.value);
         
         const btn = document.querySelector("#linkContainer button");
-        const originalText = btn.innerText;
-        btn.innerText = "Copied!";
-        setTimeout(() => btn.innerText = originalText, 2000);
+        btn.innerText = "Copied! (Paste this into a browser)";
+        setTimeout(() => btn.innerText = "Copy Link to Clipboard", 3000);
     }
 </script>
 
